@@ -16,13 +16,13 @@ def process_signature(image_path, save_path=None):
     resized = resize_signature(cropped)
 
     if save_path:
-        cv2.imwrite(save_path, cropped)
+        cv2.imwrite(save_path, resized)
     
     return resized
 
 # Example usage
 if __name__ == "__main__":
-    input_path = "C:\Coding\Python\Signature Forgery Detection\Database\original_1_1.png"  # Change to your image path
+    input_path = r"C:\\Coding\\Python\\Signature Forgery Detection\\Database\\11\\forgeries_11_4.png"  # Change to your image path
     output_path = "C:\Coding\Python\Signature Forgery Detection\Database\processed_signature.jpg"
     processed = process_signature(input_path, output_path)
     cv2.imshow("Processed Signature", processed)

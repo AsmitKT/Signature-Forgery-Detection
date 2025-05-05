@@ -3,7 +3,7 @@ import cv2
 import numpy as np
 
 # Hard-coded output canvas size (width, height), divisible by 32 for easy tiling in ML pipelines
-TARGET_SIZE = (896, 896)
+TARGET_SIZE = (256, 256)
 
 def resize_signature(image, target_size=TARGET_SIZE):
     """

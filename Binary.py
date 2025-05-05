@@ -39,6 +39,7 @@ def refine_signature(binary, original):
     Refine the signature using the binary image as a mask:
     - Extract signature pixel intensities from the original grayscale image.
     - Compute a refined threshold based on the dark signature strokes.
+    - Slightly raise that threshold so lighter stroke pixels are retained.
     - Reapply thresholding so that ink strokes are black (0) and the background is white (255).
     """
     # Convert original image to grayscale.
@@ -50,16 +51,23 @@ def refine_signature(binary, original):
     # Extract the intensities for the signature pixels from the grayscale image.
     signature_pixels = gray[mask]
     
-    # Compute a refined threshold using the median of the signature pixels.
+    # Compute a refined threshold using the median of the signature pixels,
+    # then bump it up slightly so we pick up a bit more of the lighter strokes.
     if signature_pixels.size > 0:
-        refined_thresh_value = np.median(signature_pixels)
+        base_thresh = np.median(signature_pixels)
+        refined_thresh_value = min(base_thresh + 26, 255)  # small offset
     else:
         refined_thresh_value = 127  # Fallback value if no signature pixels are found.
 
-    # Reapply thresholding so that pixels with intensity lower than or equal to the threshold become black.
-    _, refined_binary = cv2.threshold(gray, refined_thresh_value, 255, cv2.THRESH_BINARY)
+    # Reapply thresholding so that pixels with intensity <= threshold become black.
+    _, refined_binary = cv2.threshold(
+        gray, refined_thresh_value, 255, cv2.THRESH_BINARY
+    )
     
     return refined_binary
+
+
+
 
 def smooth_final(refined):
     """
